@@ -5,6 +5,9 @@ CONTAINER_INTERNAL_PORT=5432
 CONTAINER_EXTERNAL_PORT=8080
 DB_NAME=CRUDTASKS
 
+postgresDriver= github.com/lib/pq
+EchoFramework= github.com/labstack/echo/v4
+
 CREATE:
 	docker run --name $(DB_CONTAINER_NAME) -e POSTGRES_USER=$(DB_CONTAINER_ROOT_USER) -e POSTGRES_PASSWORD=$(DB_CONTAINER_ROOT_PASSWORD) -e POSTGRES_DB=$(DB_NAME) -p $(CONTAINER_EXTERNAL_PORT):$(CONTAINER_INTERNAL_PORT) -d postgres:latest
 	docker ps
@@ -21,3 +24,10 @@ STOP:
 DELETE_DATABASE:
 	docker stop $(DB_CONTAINER_NAME)
 	docker rm $(DB_CONTAINER_NAME)
+
+DEPENDECIES:
+	go get $(postgresDriver)
+	go get $(EchoFramework)
+
+TIDY:
+	go mod tidy
