@@ -6,11 +6,11 @@ import (
 )
 
 const SqlMigrateTask = `CREATE TABLE IF NOT EXISTS tasks(
-	id SERIAL NOT NULL,
-	title varchar(75) NOT NULL,
-	content varchar(240) NOT NULL,
-	created_at TIMESTAMP NOT NULL now(),
-	CONSTRAINT tasks_id_pk PRIMARY_KEY (id)
+    id SERIAL NOT NULL,
+    title varchar(75) NOT NULL,
+    content varchar(240) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    CONSTRAINT tasks_id_pk PRIMARY KEY (id)
 )`
 
 type Migrator struct {
@@ -18,13 +18,13 @@ type Migrator struct {
 }
 
 func NewPsqlProductMigration(db *sql.DB) *Migrator {
-	return &psqltask{
+	return &Migrator{
 		dataBase: db,
 	}
 }
 
-func (p *psqltask) Migrate() error {
-	stmt, err := p.dataBase.Prepare(SqlMigrateTask)
+func (m *Migrator) Migrate() error {
+	stmt, err := m.dataBase.Prepare(SqlMigrateTask)
 	if err != nil {
 		return err
 	}
