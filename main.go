@@ -6,6 +6,7 @@ import (
 	"CRUD_Task_API/routes"
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"log"
 
 	_ "github.com/lib/pq"
 )
@@ -13,8 +14,9 @@ import (
 func main() {
 	DB.NewPostgresDB()
 
-	if err := migrations.NewPsqlProductMigration(DB.Pool()); err != nil {
-		fmt.Printf("Error al correr la migracion. Err:%v", err)
+	migrator := migrations.NewPsqlProductMigration(DB.Pool())
+	if err := migrator.Migrate(); err != nil {
+		log.Fatalf("No se pudo realizar la migracion de producto. Err: %v", err)
 	}
 
 	e := echo.New()
@@ -24,7 +26,7 @@ func main() {
 
 	routes.TasksRoutes(e, TaskStorage)
 
-	if err := e.Start("192.168.5.207:8000"); err != nil {
+	if err := e.Start("192.168.1.2:8000"); err != nil {
 		fmt.Printf("Error al iniciar el servidor: %v", err)
 	}
 

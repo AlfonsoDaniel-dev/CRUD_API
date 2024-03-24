@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	SqlCreateTask  = `INSERT INTO products(id, title, content, created_at) VALUES $1, $1, $3, $4`
-	SqlGetAllTasks = `SELECT (id, title, content, created_at) FROM products`
-	SqlGetTaskById = `SELECT (id, title, content, created_at) FROM products WHERE id = $1`
+	SqlCreateTask  = `INSERT INTO tasks(id, title, content, created_at) VALUES ($1, $2, $3, $4)`
+	SqlGetAllTasks = `SELECT *  FROM tasks`
+	SqlGetTaskById = `SELECT (id, title, content, created_at) FROM tasks WHERE id = $1`
 )
 
 type PsqlTask struct {
@@ -56,7 +56,7 @@ func (t *PsqlTask) GetAll() (models.Tasks, error) {
 	tasks := make(models.Tasks, 0)
 	for rows.Next() {
 		T := &models.Task{}
-		err = rows.Scan(T.ID, T.Title, T.Content, T.Created_at)
+		err = rows.Scan(&T.ID, &T.Title, &T.Content, &T.Created_at)
 		if err != nil {
 			return nil, err
 		}
