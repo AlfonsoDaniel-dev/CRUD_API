@@ -9,7 +9,9 @@ import (
 const (
 	SqlCreateTask  = `INSERT INTO tasks(id, title, content, created_at) VALUES ($1, $2, $3, $4)`
 	SqlGetAllTasks = `SELECT *  FROM tasks`
-	SqlGetTaskById = `SELECT (id, title, content, created_at) FROM tasks WHERE id = $1`
+	SqlGetTaskById = `SELECT * FROM tasks WHERE id = $1`
+	SqlUpdateTask  = `UPDATE tasks SET title = $1, content= $2 WHERE id = $3 `
+	SqlDeleteTask  = `DELETE FROM tasks * WHERE id = $1`
 )
 
 type PsqlTask struct {
@@ -62,6 +64,8 @@ func (t *PsqlTask) GetAll() (models.Tasks, error) {
 		}
 		defer rows.Close()
 
+		fmt.Println("Tareas obtenidas correctamente")
+
 		tasks = append(tasks, T)
 	}
 
@@ -81,6 +85,43 @@ func (T *PsqlTask) GetById(id int) (models.Task, error) {
 	if err != nil {
 		return models.Task{}, err
 	}
+	fmt.Println("Busqueda de tarea por su ID exitosa")
 
 	return Task, nil
+}
+
+func (T *PsqlTask) Update(Id int, t *models.Task) error {
+	stmt, err := T.database.Prepare(SqlUpdateTask)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	task := t
+	_, err = stmt.Exec(&task.Title, &task.Content, Id)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	fmt.Println("Tarea Actualizada correctamente")
+	return nil
+}
+
+func (T *PsqlTask) Delete(id int) error {
+	stmt, err := T.database.Prepare(SqlDeleteTask)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Tarea Eliminada exitosamente")
+
+	return nil
 }

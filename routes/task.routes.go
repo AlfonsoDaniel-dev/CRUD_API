@@ -12,4 +12,7 @@ func TasksRoutes(e *echo.Echo, s handlers.Service) {
 
 	tasks.GET("", handler.GetAll)
 	tasks.POST("/", handler.Create)
+	tasks.GET("/:id", handler.GetById)
+	tasks.PUT("/:id", handler.Update)
+	tasks.DELETE("/:id", handler.Delete)
 }
