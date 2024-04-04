@@ -1,14 +1,9 @@
 package models
 
-import (
-	"time"
-)
-
-type Task struct {
-	ID         int       `json:"id"`
-	Title      string    `json:"title"`
-	Content    string    `json:"content"`
-	Created_at time.Time `json:"created_At"`
+type User struct {
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Tasks    []Task `json:"tasks"`
 }
-
-type Tasks []*Task

@@ -5,12 +5,7 @@ import (
 	"fmt"
 )
 
-const SqlMigrateTask = `CREATE TABLE IF NOT EXISTS tasks(
-    id SERIAL NOT NULL,
-    title varchar(75) NOT NULL,
-    content varchar(240) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT now(),
-    CONSTRAINT tasks_id_pk PRIMARY KEY (id)
+const SqlMigrateTask = `ALTER TABLE tasks ADD user_id INTEGER FOREIGN KEY (user_id) REFERENCES users(id);
 )`
 
 type Migrator struct {
@@ -23,7 +18,7 @@ func NewPsqlProductMigration(db *sql.DB) *Migrator {
 	}
 }
 
-func (m *Migrator) Migrate() error {
+func (m *Migrator) MigrateTask() error {
 	stmt, err := m.dataBase.Prepare(SqlMigrateTask)
 	if err != nil {
 		return err

@@ -1,7 +1,8 @@
 package models
 
 type MigrateServices interface {
-	Migrate() error
+	MigrateTask() error
+	MigrateUser() error
 }
 
 type Service struct {
@@ -14,6 +15,10 @@ func NewMigrateService(Ms MigrateServices) *Service {
 	}
 }
 
-func (S *Service) Migrate() error {
-	return S.migrate.Migrate()
+func (S *Service) MigrateTask() error {
+	return S.migrate.MigrateTask()
+}
+
+func (S *Service) MigrateUser() error {
+	return S.migrate.MigrateUser()
 }

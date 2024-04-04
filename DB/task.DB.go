@@ -11,7 +11,7 @@ const (
 	SqlGetAllTasks = `SELECT *  FROM tasks`
 	SqlGetTaskById = `SELECT * FROM tasks WHERE id = $1`
 	SqlUpdateTask  = `UPDATE tasks SET title = $1, content= $2 WHERE id = $3 `
-	SqlDeleteTask  = `DELETE FROM tasks * WHERE id = $1`
+	SqlDeleteTask  = `DELETE * FROM tasks   WHERE id = $1`
 )
 
 type PsqlTask struct {
