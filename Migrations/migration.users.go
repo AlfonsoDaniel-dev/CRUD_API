@@ -1,9 +1,6 @@
 package migrations
 
-import (
-	"database/sql"
-	"fmt"
-)
+import "fmt"
 
 const psqlMigrateUser = `CREATE TABLE IF NOT EXISTS users (
     id SERIAL NOT NULL,
@@ -14,16 +11,8 @@ const psqlMigrateUser = `CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT users_email_uq UNIQUE (email)
 );`
 
-type psqlMigrateUser struct {
-	db *sql.DB
-}
-
-func NewUser(DB *sql.DB) psqlMigrateUser {
-	return psqlMigrateUser{DB}
-}
-
-func (U *psqlUser) Migrate() error {
-	stmt, err := U.db.Prepare(psqlMigrateUser)
+func (m *Migrator) MigrateUser() error {
+	stmt, err := m.dataBase.Prepare(psqlMigrateUser)
 	if err != nil {
 		return err
 	}
@@ -35,7 +24,7 @@ func (U *psqlUser) Migrate() error {
 		return err
 	}
 
-	fmt.Println("migrated user successfully")
+	fmt.Println("Users migration completed successfully")
 
 	return nil
 }

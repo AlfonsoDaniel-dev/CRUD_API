@@ -6,20 +6,20 @@ import (
 	"CRUD_Task_API/routes"
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"log"
-
 	_ "github.com/lib/pq"
+	"log"
 )
 
 func main() {
 	DB.NewPostgresDB()
 
-	migrator := migrations.NewPsqlProductMigration(DB.Pool())
-	if err := migrator.MigrateTask(); err != nil {
-		log.Fatalf("No se pudo realizar la migracion de tarea. Err: %v", err)
+	migrator := migrations.NewMigration(DB.Pool())
+	if err := migrator.MigrateUser(); err != nil {
+		log.Fatal(err)
 	}
+
 	if err := migrator.MigrateTask(); err != nil {
-		log.Fatalf("No se pudo realizar la migracion de usuario. Err: %v", err)
+		log.Fatal(err)
 	}
 
 	e := echo.New()

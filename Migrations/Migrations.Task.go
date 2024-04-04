@@ -1,22 +1,20 @@
 package migrations
 
 import (
-	"database/sql"
 	"fmt"
 )
 
-const SqlMigrateTask = `ALTER TABLE tasks ADD user_id INTEGER FOREIGN KEY (user_id) REFERENCES users(id);
-)`
-
-type Migrator struct {
-	dataBase *sql.DB
-}
-
-func NewPsqlProductMigration(db *sql.DB) *Migrator {
-	return &Migrator{
-		dataBase: db,
-	}
-}
+const SqlMigrateTask = `CREATE TABLE IF NOT EXISTS tasks(
+    id SERIAL NOT NULL,
+    user_id SERIAL NOT NULL,
+    title VARCHAR(45) NOT NULL,
+    content VARCHAR(240) NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP,
+    CONSTRAINT tasks_id_pk PRIMARY KEY (id),
+    CONSTRAINT tasks_user_id_fk FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+)
+`
 
 func (m *Migrator) MigrateTask() error {
 	stmt, err := m.dataBase.Prepare(SqlMigrateTask)
@@ -30,7 +28,7 @@ func (m *Migrator) MigrateTask() error {
 		return err
 	}
 
-	fmt.Println("Migracion de task realizada")
+	fmt.Println("Task Migration Success")
 
 	return nil
 
